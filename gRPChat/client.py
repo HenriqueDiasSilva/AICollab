@@ -32,7 +32,7 @@ class Client:
 
     def send_message(self, event):
         message = self.entry_message.get() 
-        if message is not '':
+        if message != '':
             n = chat.Note()  
             n.name = self.username  
             n.message = message  
