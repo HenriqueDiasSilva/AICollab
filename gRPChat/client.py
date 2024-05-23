@@ -31,32 +31,31 @@ class Client:
             self.chat_list.insert(END, "[{}] {}\n".format(note.name, note.message))  # Adiciona mensagem à interface
 
     def send_message(self, event):
-        message = self.entry_message.get() 
+        message = self.entry_message.get()
         if message != '':
             n = chat.Note()  
             n.name = self.username  
             n.message = message  
             print("S[{}] {}".format(n.name, n.message))  
             self.conn.SendNote(n)  # Envia a mensagem para o servidor
+            self.entry_message.delete(0, END) 
 
     def __setup_ui(self):
-        self.chat_list = Text()
-        self.chat_list.pack(side=TOP)
-        self.lbl_username = Label(self.window, text=self.username)
+        self.chat_list = Text(self.window, wrap=WORD)
+        self.chat_list.pack(side=TOP, fill=BOTH, expand=True, padx=10, pady=10)
+        self.lbl_username = Label(self.window, text=self.username, bd=1, relief=SUNKEN, anchor=W)
         self.lbl_username.pack(side=LEFT)
-        self.entry_message = Entry(self.window, bd=5)
+        self.entry_message = Entry(self.window, bd=5) 
         self.entry_message.bind('<Return>', self.send_message)
         self.entry_message.focus()
-        self.entry_message.pack(side=BOTTOM)
+        self.entry_message.pack(side=BOTTOM, fill=X, padx=10, pady=10)
 
 
 if __name__ == '__main__':
-    root = Tk()  
-    frame = Frame(root, width=300, height=300)
-    frame.pack()
-    root.withdraw()
+    root = Tk()
+    root.geometry("400x500")
     username = None
     while username is None:
         username = simpledialog.askstring("User", "Nome de usuário:", parent=root)
-    root.deiconify() 
-    c = Client(username, frame)  # Inicia cliente e a thread que vai manter a conexão com o servidor aberta
+    root.deiconify()
+    c = Client(username, root)  # Inicia cliente e a thread que vai manter a conexão com o servidor aberta

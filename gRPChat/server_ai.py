@@ -32,35 +32,37 @@ class ChatServer(rpc.ChatServerServicer):
         print("[{}] {}".format(request.name, request.message))
         self.chats.append(request)
 
-        # Enviar a mensagem recebida para a API de chat
-        url = "http://localhost:11434/api/chat"
-        data = {
-            "model": "phi3",
-            "messages": [
-                {
-                    "role": "user",
-                    "content": request.message
-                }
-            ],
-            "stream": False
-        }
+        # Verificar se a mensagem começa com "@chat"
+        if request.message.startswith("@chat"):
+            # Enviar a mensagem recebida para a API de chat
+            url = "http://localhost:11434/api/chat"
+            data = {
+                "model": "phi3",
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": request.message
+                    }
+                ],
+                "stream": False
+            }
 
-        response = requests.post(url, json=data)
+            response = requests.post(url, json=data)
 
-        # Verificar a resposta da API
-        if response.status_code == 200:
-            json_response = response.json()
-            message_content = json_response.get('message', {}).get('content', '')
-            if message_content:
-                # Criar uma nova Note com a resposta da API
-                response_note = chat.Note(
-                    name="server",
-                    message=message_content
-                )
-                # Adicionar a resposta na lista de chats
-                self.chats.append(response_note)
-        else:
-            print("Failed to get a valid response from the API. Status Code:", response.status_code)
+            # Verificar a resposta da API
+            if response.status_code == 200:
+                json_response = response.json()
+                message_content = json_response.get('message', {}).get('content', '')
+                if message_content:
+                    # Criar uma nova Note com a resposta da API
+                    response_note = chat.Note(
+                        name="server",
+                        message=message_content
+                    )
+                    # Adicionar a resposta na lista de chats
+                    self.chats.append(response_note)
+            else:
+                print("Failed to get a valid response from the API. Status Code:", response.status_code)
 
         return chat.Empty()
 
