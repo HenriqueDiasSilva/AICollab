@@ -9,4 +9,6 @@ O desenvolvimento deste trabalho terá como foco o uso e implementação da tecn
 ### Tecnologias
 
 - [gRPC](https://grpc.io/docs/languages/python/quickstart/) 
-- Gemini
+- Gemini 
+- ChatGPT
+- IIama 
