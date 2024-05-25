@@ -1,0 +1,7 @@
+- Caso tenha problemas na importação da biblioteca Tk para interface gráfica do Pyhton, 
+consulte a documentação de instalação (https://tkdocs.com/tutorial/install.html#install-x11-python)
+
+- Use os programas generate-proto para gerar os arquivos a partir do proto/chat.proto, ou,
+use o código deles para rodar direto no terminal
+
+- Após gerar o arquivos _pb2_grpc.py e _pb2.py, retire-os do diretório /proto e coloque junto dos demais arquivos.

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package grpc;
+
+message Empty {}
+
+message Note {
+    string name = 1;
+    string message = 2;
+}
+
+service ChatServer {
+    // RPC de streaming de resposta 
+    // mesmo que o cliente não envie nada, ele recebe um streaming de mensagens
+    rpc ChatStream (Empty) returns (stream Note);
+    // RPC simples
+    // o Cliente envia uma mensagem e não recebe nada
+    rpc SendNote (Note) returns (Empty);
+}
