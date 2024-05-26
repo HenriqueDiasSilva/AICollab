@@ -1,10 +1,11 @@
-from concurrent import futures
-import grpc
 import time
 import requests
 
+import grpc
 import chat_pb2 as chat
 import chat_pb2_grpc as rpc
+
+from concurrent import futures
 
 class ChatServer(rpc.ChatServerServicer):  
 
@@ -13,8 +14,9 @@ class ChatServer(rpc.ChatServerServicer):
         
     def ChatStream(self, request_iterator, context):
         """
-        Esse é um stream de resposta. Isso significa que o servidor pode continuar mandando mensagens.
-        Todo cliente abre essa conexão e espera pelo servidor mandar novas mensagens.
+        Esse é um stream de resposta. Isso significa que o servidor pode continuar
+        mandando mensagens. Todo cliente abre essa conexão e espera pelo servidor 
+        mandar novas mensagens.
         """
         lastindex = 0
 
@@ -26,10 +28,7 @@ class ChatServer(rpc.ChatServerServicer):
                 yield n
 
     def SendNote(self, request: chat.Note, context):
-        """
-        Esse método é chamado quando um cliente envia uma mensagem para o servidor.
-        """
-        print("[{}] {}".format(request.name, request.message))
+        #Esse método é chamado quando um cliente envia uma mensagem para o servidor.
         self.chats.append(request)
 
         # Verificar se a mensagem começa com "@chat"
@@ -73,7 +72,10 @@ if __name__ == '__main__':
     print('Starting server. Listening...')
     server.add_insecure_port('[::]:' + str(port))
     server.start()
-    # O servidor inicia em segundo plano (em outro thread), então continua aguardando
-    # se o tempo de espera não for criado, a thread main vai se encerrar, e por consequência, todas as demais
+    """
+    O servidor inicia em segundo plano (em outro thread), então continua 
+    aguardando se o tempo de espera não for criado, a thread main vai se 
+    encerrar, e por consequência, todas as demais.
+    """
     while True:
         time.sleep(64 * 64 * 100)

@@ -5,7 +5,7 @@ import warnings
 
 import chat_pb2 as chat__pb2
 
-GRPC_GENERATED_VERSION = '1.63.0'
+GRPC_GENERATED_VERSION = '1.64.0'
 GRPC_VERSION = grpc.__version__
 EXPECTED_ERROR_RELEASE = '1.65.0'
 SCHEDULED_RELEASE_DATE = 'June 25, 2024'
@@ -55,13 +55,17 @@ class ChatServerServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def ChatStream(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """RPC de streaming de resposta 
+        mesmo que o cliente não envie nada, ele recebe um streaming de mensagens
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
     def SendNote(self, request, context):
-        """Missing associated documentation comment in .proto file."""
+        """RPC simples
+        o Cliente envia uma mensagem e não recebe nada
+        """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -83,6 +87,7 @@ def add_ChatServerServicer_to_server(servicer, server):
     generic_handler = grpc.method_handlers_generic_handler(
             'grpc.ChatServer', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
+    server.add_registered_method_handlers('grpc.ChatServer', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
