@@ -45,7 +45,7 @@ class Client:
         self.logo_image = Image.open("./img/logo.png")
         self.logo_photo = ImageTk.PhotoImage(self.logo_image)
         self.logo_label = Label(self.window, image=self.logo_photo)
-        self.logo_label.pack(side=TOP)
+        self.logo_label.pack(side=TOP, pady=5)
         
         self.chat_list = Text(self.window, wrap=WORD)
         self.chat_list.pack(side=TOP, fill=BOTH, expand=True, padx=10, pady=10)
