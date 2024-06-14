@@ -1,28 +1,47 @@
-from openai import OpenAI
+import requests
 from dotenv import load_dotenv
 import os
+import json
 
-# Bloco de Código para pegar configurar a Key da OpenAI
+# Carregar a chave da API do OpenAI
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPEN_AI_KEY"))
+api_key = os.getenv("OPEN_AI_KEY")
 
+def perguntar_ao_chatgpt(pergunta):
+    """
+    Função que recebe uma pergunta e retorna a resposta do ChatGPT.
 
-# Bloco de Codigo da Chamada na API apresentando a resposta
+    Args:
+        pergunta (str): A pergunta a ser feita ao ChatGPT.
+
+    Returns:
+        str: A resposta do ChatGPT.
+    """
+    url = "https://api.openai.com/v1/chat/completions"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {api_key}"
+    }
+    data = {
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": pergunta}],
+        "temperature": 0.7
+    }
+
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+
+    if response.status_code == 200:
+        resposta = response.json()
+        return resposta['choices'][0]['message']['content']
+    else:
+        return f"Erro: {response.status_code} - {response.text}"
+
+# Exemplo de uso da função
 while True:
-    # Bloco da Pergunta
-    user_Input = input("\n>>>Digite uma pergunta para o Chat: ")
-
-    # Encerra o programa de Chat
+    user_Input = input("\n>>>Digite uma pergunta para o Chat(Digite 'sair' para encerrar): ")
     if user_Input.lower() == "sair":
         print("Chat encerrado!")
         break
 
-    # Bloco de integracao com o ChatGPT
-    stream = client.chat.completions.create(
-        model="gpt-3.5-turbo",  # Motor de busca
-        messages=[{"role": "user", "content": user_Input}],
-        stream=True,
-    )
-    for chunk in stream:
-        if chunk.choices[0].delta.content is not None:
-            print(chunk.choices[0].delta.content, end="")
+    resposta = perguntar_ao_chatgpt(user_Input)
+    print(resposta)
